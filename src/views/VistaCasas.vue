@@ -42,12 +42,7 @@
 import axios from "axios";
 import vistamiembros from "./VistaMiembros";
 import imagen from "../assets/fondo.jpg";
-const urlImagen = "";
-const axiosInstance = axios.create({
-  headers: {
-    "Access-Control-Allow-Origin": " *",
-  },
-});
+
 export default {
   name: "VistaCasas",
   props: {
@@ -56,14 +51,8 @@ export default {
   data() {
     return {
       datos() {},
-      datosintegrantes() {},
-      vectorNombreCasas: null,
       cantidadIntegrantes: null,
       nombreCasa: null,
-      integrantesG: null,
-      integrantesS: null,
-      integrantesH: null,
-      integrantesR: null,
       imagen: imagen,
       arregloCasas: null,
     };
@@ -78,36 +67,31 @@ export default {
         .get("http://hp-api.herokuapp.com/api/characters")
         .then((response) => {
           this.datos = response.data;
-
           this.agregarCasa(this.datos);
         });
     },
+
+    /*Metod encargado de filtrar las casas por nombre eliminar las que que el dato house 
+    esta vacio y de relizar el conteo de los integrantes por cada casa*/
 
     agregarCasa(casa) {
       console.log(casa);
       var casasMiembros = new Map();
 
-      casa.filter((v) => v.house !== "").map((v) => addToMap(v.house));
+      casa.filter((v) => v.house !== "").map((v) => contarCasas(v.house));
 
-      function addToMap(casa) {
+      function contarCasas(casa) {
         if (casasMiembros.get(casa) === undefined) {
           casasMiembros.set(casa, 1);
           return;
         }
         casasMiembros.set(casa, casasMiembros.get(casa) + 1);
       }
-
       this.arregloCasas = casasMiembros;
-
-      console.log("casas :" + this.arregloCasas);
-      /* casasMiembros.forEach(function (valor, clave) {
-        console.log(`La casa ${clave}  tiene ${valor} miembros`);
-      });*/
     },
 
     /**Metodo Encargado de Redirigir a la vista de miembros por casa */
     vistaMiembros(casa) {
-      this.obtenerDatosPorEscuela(casa);
       this.$router.push({
         name: "VistaMiembros",
         params: {
@@ -115,21 +99,9 @@ export default {
         },
       });
     },
-
-    /**Metodo para listar interandes de cada escuela */
-    obtenerDatosPorEscuela(casa) {
-      //alert(casa);
-      axios
-        .get("http://hp-api.herokuapp.com/api/characters/house/" + casa)
-        .then((response) => {
-          this.cantidadIntegrantes = response.data.length;
-        });
-    },
   },
   created() {
     this.obtenerDatos();
-    //this.obtenerImagen();
-    this.obtenerDatosPorEscuela();
   },
 };
 </script>

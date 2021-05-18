@@ -122,11 +122,8 @@ export default {
 
   data() {
     return {
-      datos() {},
       datosintegrantes() {},
       arregloNuevo: [],
-      vectorNombreCasas: null,
-      cantidadIntegrantes: null,
       profilepic: null,
       seleccionado: null,
       nombre: null,
@@ -223,12 +220,11 @@ export default {
       this.arregloNuevo = [];
       this.resultados = null;
       this.obtenerDatosPorEscuela();
-     
     },
 
-    regresar(){
-       this.$router.push({ name: "VistaPrincipal" });
-    }
+    regresar() {
+      this.$router.push({ name: "VistaPrincipal" });
+    },
   },
   created() {
     this.obtenerImagen();
